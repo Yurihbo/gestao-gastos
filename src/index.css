@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Fundo geral */
+body {
+  @apply bg-black text-gray-100 antialiased;
+}
+
+/* Scroll mais clean */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: #2d2d2d;
+  border-radius: 10px;
+}
+
+/* Cartões (painéis, box, etc.) */
+.card {
+  @apply bg-[#111111] rounded-xl shadow-md border border-[#2a2a2a];
+}
+
+/* Títulos */
+h1, h2, h3, h4 {
+  @apply text-white font-bold;
+}
+
+/* Texto secundário */
+.text-muted {
+  @apply text-gray-400;
+}
+
+/* Botões */
+.btn {
+  @apply px-4 py-2 rounded-lg font-medium transition;
+}
+
+.btn-primary {
+  @apply bg-white text-black hover:bg-gray-200;
+}
+
+.btn-secondary {
+  @apply bg-[#1a1a1a] text-gray-200 hover:bg-[#2a2a2a];
+}
+
+
+.scroll-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+.scroll-thin::-webkit-scrollbar-thumb { background: #374151; border-radius: 9999px; }
+.scroll-thin::-webkit-scrollbar-track { background: transparent; }
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&display=swap');
+
+.font-orbitron {
+  font-family: 'Orbitron', sans-serif;
+}
