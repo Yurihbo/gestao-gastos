@@ -39,7 +39,7 @@ self.addEventListener("fetch", (event) => {
       fetch(event.request).catch(() => caches.match("/index.html"))
     );
   } else {
-    // Para CSS, JS, imagens → usa cache se disponível
+    
     event.respondWith(
       caches.match(event.request).then((response) => {
         return (
