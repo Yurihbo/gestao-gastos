@@ -195,7 +195,7 @@ Este projeto está sob a licença **MIT**. Veja o arquivo `LICENSE`.
 
 ---
 
-##  Capturas (opcionais)
+##  Capturas 
 
 Adicione aqui screenshots do app:
 
