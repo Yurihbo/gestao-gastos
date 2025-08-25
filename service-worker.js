@@ -1,57 +1,71 @@
-const CACHE_NAME = "finance-app-v1";
+const CACHE_NAME = "ggmoney-cache-v1";
+
+
 const urlsToCache = [
-  "/",
-  "/index.html",
-  "/manifest.json",
-  "/icons/icon-192.png",
-  "/icons/icon-512.png"
+  "./", 
+  "./index.html",
+  "./manifest.webmanifest",
+  "./icons/favicon-16.png",
+  "./icons/favicon-32.png",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png"
 ];
 
-// Instala o Service Worker e faz cache inicial
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
+      console.log("📦 Cache inicial criado");
       return cache.addAll(urlsToCache);
     })
   );
 });
 
-// Ativa e limpa caches antigos
+
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) =>
-      Promise.all(
-        cacheNames.map((cache) => {
-          if (cache !== CACHE_NAME) {
-            return caches.delete(cache);
-          }
-        })
-      )
-    )
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames
+          .filter((name) => name !== CACHE_NAME)
+          .map((name) => caches.delete(name))
+      );
+    })
   );
+  console.log("⚡ Service Worker ativo");
 });
 
-// Estratégia: Network First para HTML, Cache First para assets
+
 self.addEventListener("fetch", (event) => {
-  if (event.request.mode === "navigate") {
-    // Para HTML → tenta rede primeiro
-    event.respondWith(
-      fetch(event.request).catch(() => caches.match("/index.html"))
-    );
-  } else {
-    
-    event.respondWith(
-      caches.match(event.request).then((response) => {
-        return (
-          response ||
-          fetch(event.request).then((resp) => {
-            return caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, resp.clone());
-              return resp;
-            });
-          })
-        );
-      })
-    );
-  }
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+
+      
+      return fetch(event.request)
+        .then((response) => {
+          
+          if (!response || response.status !== 200 || response.type !== "basic") {
+            return response;
+          }
+
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+
+          return response;
+        })
+        .catch(() => {
+          
+          return new Response(
+            "<h1>Você está offline</h1><p>Não foi possível carregar o conteúdo.</p>",
+            { headers: { "Content-Type": "text/html" } }
+          );
+        });
+    })
+  );
 });
